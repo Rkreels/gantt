@@ -10,19 +10,45 @@ import {
   MessageSquare,
   Settings,
   Palette,
+  Plus,
+  Trash2,
+  Pencil,
 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 interface AppHeaderProps {
   onOpenChat: () => void
   onOpenSettings: () => void
+  onOpenNewProject: () => void
+  onEditProject?: () => void
 }
 
-export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
-  const { projects, activeProject, setActiveProjectId } = useProject()
+export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEditProject }: AppHeaderProps) {
+  const { projects, activeProject, setActiveProjectId, deleteProject } = useProject()
   const [menuOpen, setMenuOpen] = useState(false)
   const [selectorOpen, setSelectorOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDeleteProject = async () => {
+    if (!activeProject) return
+    setIsDeleting(true)
+    await deleteProject(activeProject.id)
+    setIsDeleting(false)
+    setDeleteDialogOpen(false)
+  }
 
   return (
     <>
@@ -55,7 +81,7 @@ export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
                       className="fixed inset-0 z-40"
                       onClick={() => setSelectorOpen(false)}
                     />
-                    <div className="absolute top-full left-0 mt-1 z-50 bg-card border border-border rounded-lg shadow-lg min-w-[220px] py-1">
+                    <div className="absolute top-full left-0 mt-1 z-50 bg-card border border-border rounded-lg shadow-lg min-w-[240px] py-1">
                       {projects.map((p) => (
                         <button
                           key={p.id}
@@ -77,16 +103,61 @@ export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
                           </div>
                         </button>
                       ))}
+                      <div className="border-t border-border mt-1 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectorOpen(false)
+                            onOpenNewProject()
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-primary hover:bg-accent transition-colors"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span>New Project</span>
+                        </button>
+                      </div>
                     </div>
                   </>
                 )}
               </div>
             </>
           )}
+
+          {!activeProject && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onOpenNewProject}
+              className="ml-2"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">New Project</span>
+            </Button>
+          )}
         </div>
 
         {/* Right: Actions */}
         <div className="flex items-center gap-1">
+          {activeProject && (
+            <div className="hidden md:flex items-center gap-1 mr-1">
+              <button
+                type="button"
+                onClick={onEditProject}
+                className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                title="Edit Project"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setDeleteDialogOpen(true)}
+                className="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                title="Delete Project"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
           {/* Desktop chat + settings buttons */}
           <button
             type="button"
@@ -139,7 +210,7 @@ export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col p-4 gap-2">
+          <div className="flex-1 flex flex-col p-4 gap-2 overflow-y-auto">
             <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">
               Projects
             </div>
@@ -171,6 +242,18 @@ export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
                 </div>
               </button>
             ))}
+
+            <Button
+              variant="outline"
+              className="mt-2"
+              onClick={() => {
+                setMenuOpen(false)
+                onOpenNewProject()
+              }}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Project
+            </Button>
 
             <div className="w-full h-px bg-border my-2" />
 
@@ -206,9 +289,59 @@ export function AppHeader({ onOpenChat, onOpenSettings }: AppHeaderProps) {
               <Palette className="w-5 h-5" />
               <span className="font-medium">Brand Assets</span>
             </Link>
+
+            {activeProject && (
+              <>
+                <div className="w-full h-px bg-border my-2" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    onEditProject?.()
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-accent transition-colors min-h-[52px]"
+                >
+                  <Pencil className="w-5 h-5" />
+                  <span className="font-medium">Edit Project</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    setDeleteDialogOpen(true)
+                  }}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-colors min-h-[52px]"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <span className="font-medium">Delete Project</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{activeProject?.name}"? This action cannot be undone and will delete all tasks associated with this project.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteProject}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
