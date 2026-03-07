@@ -1,4 +1,4 @@
-import { db } from "@/lib/db"
+import { memoryStore } from "@/lib/memory-store"
 import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
@@ -6,23 +6,24 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, startDate, endDate, progress, category, assignee, dependencies, projectId } = body
 
-    const task = await db.task.create({
-      data: {
-        name,
-        startDate,
-        endDate,
-        progress: progress || 0,
-        category: category || "development",
-        assignee: assignee || "",
-        dependencies: Array.isArray(dependencies) ? dependencies.join(",") : (dependencies || ""),
-        projectId,
-      },
+    const task = memoryStore.createTask(projectId, {
+      name,
+      startDate,
+      endDate,
+      progress: progress || 0,
+      category: category || "development",
+      assignee: assignee || "",
+      dependencies: Array.isArray(dependencies) ? dependencies : [],
     })
 
-    return NextResponse.json({
-      ...task,
-      dependencies: task.dependencies ? task.dependencies.split(",").filter(Boolean) : [],
-    })
+    if (!task) {
+      return NextResponse.json(
+        { error: "Project not found" },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(task)
   } catch (error) {
     console.error("Error creating task:", error)
     return NextResponse.json(

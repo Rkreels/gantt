@@ -1,4 +1,4 @@
-import { db } from "@/lib/db"
+import { memoryStore } from "@/lib/memory-store"
 import { NextResponse } from "next/server"
 
 export async function GET(
@@ -7,22 +7,13 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const project = await db.project.findUnique({
-      where: { id },
-      include: { tasks: true },
-    })
+    const project = memoryStore.getProject(id)
 
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 })
     }
 
-    return NextResponse.json({
-      ...project,
-      tasks: project.tasks.map((task) => ({
-        ...task,
-        dependencies: task.dependencies ? task.dependencies.split(",").filter(Boolean) : [],
-      })),
-    })
+    return NextResponse.json(project)
   } catch (error) {
     console.error("Error fetching project:", error)
     return NextResponse.json({ error: "Failed to fetch project" }, { status: 500 })
@@ -38,24 +29,18 @@ export async function PUT(
     const body = await request.json()
     const { name, description, startDate, endDate } = body
 
-    const project = await db.project.update({
-      where: { id },
-      data: {
-        name,
-        description: description || "",
-        startDate,
-        endDate,
-      },
-      include: { tasks: true },
+    const project = memoryStore.updateProject(id, {
+      name,
+      description: description || "",
+      startDate,
+      endDate,
     })
 
-    return NextResponse.json({
-      ...project,
-      tasks: project.tasks.map((task) => ({
-        ...task,
-        dependencies: task.dependencies ? task.dependencies.split(",").filter(Boolean) : [],
-      })),
-    })
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+    }
+
+    return NextResponse.json(project)
   } catch (error) {
     console.error("Error updating project:", error)
     return NextResponse.json({ error: "Failed to update project" }, { status: 500 })
@@ -68,9 +53,11 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    await db.project.delete({
-      where: { id },
-    })
+    const success = memoryStore.deleteProject(id)
+
+    if (!success) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
