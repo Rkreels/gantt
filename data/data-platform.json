@@ -1,0 +1,99 @@
+{
+  "id": "data-platform",
+  "name": "Data Platform",
+  "description": "Internal data analytics platform with real-time dashboards and reporting",
+  "startDate": "2026-01-12",
+  "endDate": "2026-05-15",
+  "tasks": [
+    {
+      "id": "d1",
+      "name": "Data Audit",
+      "startDate": "2026-01-12",
+      "endDate": "2026-01-30",
+      "progress": 100,
+      "category": "planning",
+      "assignee": "Rina Nakamura",
+      "dependencies": []
+    },
+    {
+      "id": "d2",
+      "name": "Schema Design",
+      "startDate": "2026-01-26",
+      "endDate": "2026-02-13",
+      "progress": 100,
+      "category": "planning",
+      "assignee": "Omar Hassan",
+      "dependencies": ["d1"]
+    },
+    {
+      "id": "d3",
+      "name": "ETL Pipeline",
+      "startDate": "2026-02-09",
+      "endDate": "2026-03-06",
+      "progress": 70,
+      "category": "development",
+      "assignee": "Omar Hassan",
+      "dependencies": ["d2"]
+    },
+    {
+      "id": "d4",
+      "name": "Dashboard UI",
+      "startDate": "2026-02-16",
+      "endDate": "2026-03-20",
+      "progress": 55,
+      "category": "design",
+      "assignee": "Rina Nakamura",
+      "dependencies": ["d2"]
+    },
+    {
+      "id": "d5",
+      "name": "Real-time Engine",
+      "startDate": "2026-03-02",
+      "endDate": "2026-03-27",
+      "progress": 20,
+      "category": "development",
+      "assignee": "Carlos Mendez",
+      "dependencies": ["d3"]
+    },
+    {
+      "id": "d6",
+      "name": "Report Builder",
+      "startDate": "2026-03-16",
+      "endDate": "2026-04-10",
+      "progress": 0,
+      "category": "development",
+      "assignee": "Rina Nakamura",
+      "dependencies": ["d4", "d5"]
+    },
+    {
+      "id": "d7",
+      "name": "Access Controls",
+      "startDate": "2026-03-23",
+      "endDate": "2026-04-10",
+      "progress": 0,
+      "category": "development",
+      "assignee": "Carlos Mendez",
+      "dependencies": ["d4"]
+    },
+    {
+      "id": "d8",
+      "name": "Integration Testing",
+      "startDate": "2026-04-06",
+      "endDate": "2026-04-24",
+      "progress": 0,
+      "category": "testing",
+      "assignee": "Omar Hassan",
+      "dependencies": ["d6", "d7"]
+    },
+    {
+      "id": "d9",
+      "name": "Rollout",
+      "startDate": "2026-04-27",
+      "endDate": "2026-05-15",
+      "progress": 0,
+      "category": "deployment",
+      "assignee": "Carlos Mendez",
+      "dependencies": ["d8"]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "id": "website-redesign",
+  "name": "Website Redesign",
+  "description": "Complete overhaul of the company website with new branding and improved UX",
+  "startDate": "2026-01-05",
+  "endDate": "2026-04-30",
+  "tasks": [
+    {
+      "id": "t1",
+      "name": "Discovery & Research",
+      "startDate": "2026-01-05",
+      "endDate": "2026-01-23",
+      "progress": 100,
+      "category": "planning",
+      "assignee": "Sarah Chen",
+      "dependencies": []
+    },
+    {
+      "id": "t2",
+      "name": "Brand Guidelines",
+      "startDate": "2026-01-19",
+      "endDate": "2026-02-06",
+      "progress": 100,
+      "category": "design",
+      "assignee": "Marcus Rivera",
+      "dependencies": ["t1"]
+    },
+    {
+      "id": "t3",
+      "name": "Wireframes",
+      "startDate": "2026-01-26",
+      "endDate": "2026-02-13",
+      "progress": 85,
+      "category": "design",
+      "assignee": "Sarah Chen",
+      "dependencies": ["t1"]
+    },
+    {
+      "id": "t4",
+      "name": "UI Design",
+      "startDate": "2026-02-09",
+      "endDate": "2026-03-06",
+      "progress": 60,
+      "category": "design",
+      "assignee": "Marcus Rivera",
+      "dependencies": ["t2", "t3"]
+    },
+    {
+      "id": "t5",
+      "name": "Frontend Dev",
+      "startDate": "2026-02-23",
+      "endDate": "2026-03-27",
+      "progress": 30,
+      "category": "development",
+      "assignee": "Alex Kim",
+      "dependencies": ["t4"]
+    },
+    {
+      "id": "t6",
+      "name": "Backend API",
+      "startDate": "2026-02-16",
+      "endDate": "2026-03-20",
+      "progress": 45,
+      "category": "development",
+      "assignee": "Jordan Park",
+      "dependencies": ["t3"]
+    },
+    {
+      "id": "t7",
+      "name": "Content Migration",
+      "startDate": "2026-03-09",
+      "endDate": "2026-03-27",
+      "progress": 0,
+      "category": "content",
+      "assignee": "Priya Sharma",
+      "dependencies": ["t5", "t6"]
+    },
+    {
+      "id": "t8",
+      "name": "QA & Testing",
+      "startDate": "2026-03-23",
+      "endDate": "2026-04-10",
+      "progress": 0,
+      "category": "testing",
+      "assignee": "Alex Kim",
+      "dependencies": ["t5", "t7"]
+    },
+    {
+      "id": "t9",
+      "name": "UAT",
+      "startDate": "2026-04-06",
+      "endDate": "2026-04-17",
+      "progress": 0,
+      "category": "testing",
+      "assignee": "Sarah Chen",
+      "dependencies": ["t8"]
+    },
+    {
+      "id": "t10",
+      "name": "Launch",
+      "startDate": "2026-04-20",
+      "endDate": "2026-04-30",
+      "progress": 0,
+      "category": "deployment",
+      "assignee": "Jordan Park",
+      "dependencies": ["t9"]
+    }
+  ]
+}

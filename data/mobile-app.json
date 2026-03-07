@@ -1,0 +1,109 @@
+{
+  "id": "mobile-app",
+  "name": "Mobile App v2",
+  "description": "Native mobile application rebuild with React Native and new feature set",
+  "startDate": "2026-02-01",
+  "endDate": "2026-06-30",
+  "tasks": [
+    {
+      "id": "m1",
+      "name": "Requirements",
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-14",
+      "progress": 100,
+      "category": "planning",
+      "assignee": "Emily Zhao",
+      "dependencies": []
+    },
+    {
+      "id": "m2",
+      "name": "Architecture Design",
+      "startDate": "2026-02-10",
+      "endDate": "2026-02-28",
+      "progress": 80,
+      "category": "planning",
+      "assignee": "Dev Patel",
+      "dependencies": ["m1"]
+    },
+    {
+      "id": "m3",
+      "name": "Core Navigation",
+      "startDate": "2026-02-23",
+      "endDate": "2026-03-13",
+      "progress": 50,
+      "category": "development",
+      "assignee": "Dev Patel",
+      "dependencies": ["m2"]
+    },
+    {
+      "id": "m4",
+      "name": "Auth & Profiles",
+      "startDate": "2026-03-02",
+      "endDate": "2026-03-20",
+      "progress": 25,
+      "category": "development",
+      "assignee": "Liam Torres",
+      "dependencies": ["m2"]
+    },
+    {
+      "id": "m5",
+      "name": "UI Components",
+      "startDate": "2026-02-16",
+      "endDate": "2026-03-27",
+      "progress": 40,
+      "category": "design",
+      "assignee": "Nina Schmidt",
+      "dependencies": ["m1"]
+    },
+    {
+      "id": "m6",
+      "name": "Push Notifications",
+      "startDate": "2026-03-16",
+      "endDate": "2026-04-03",
+      "progress": 0,
+      "category": "development",
+      "assignee": "Liam Torres",
+      "dependencies": ["m3", "m4"]
+    },
+    {
+      "id": "m7",
+      "name": "Offline Support",
+      "startDate": "2026-04-06",
+      "endDate": "2026-04-24",
+      "progress": 0,
+      "category": "development",
+      "assignee": "Dev Patel",
+      "dependencies": ["m3", "m6"]
+    },
+    {
+      "id": "m8",
+      "name": "Performance Tuning",
+      "startDate": "2026-04-20",
+      "endDate": "2026-05-08",
+      "progress": 0,
+      "category": "development",
+      "assignee": "Dev Patel",
+      "dependencies": ["m7"]
+    },
+    {
+      "id": "m9",
+      "name": "Beta Testing",
+      "startDate": "2026-05-04",
+      "endDate": "2026-05-29",
+      "progress": 0,
+      "category": "testing",
+      "assignee": "Emily Zhao",
+      "dependencies": ["m5", "m8"]
+    },
+    {
+      "id": "m10",
+      "name": "App Store Release",
+      "startDate": "2026-06-01",
+      "endDate": "2026-06-30",
+      "progress": 0,
+      "category": "deployment",
+      "assignee": "Liam Torres",
+      "dependencies": ["m9"]
+    }
+  ]
+}
