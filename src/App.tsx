@@ -10,7 +10,7 @@ import AppleTouchPreviewPage from './pages/AppleTouchPreviewPage'
 function App() {
   return (
     <ProjectProvider>
-      <Routes basename="gantt-chart">
+      <Routes>
         <Route path="/" element={<GanttPage />} />
         <Route path="/brand-assets" element={<BrandAssetsPage />} />
         <Route path="/thumbnail" element={<ThumbnailPage />} />
