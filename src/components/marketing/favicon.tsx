@@ -1,6 +1,3 @@
-"use client"
-
-// Brand colors
 const BRAND = {
   primary: "hsl(220, 70%, 55%)",
   foreground: "hsl(220, 14%, 96%)",

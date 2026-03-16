@@ -1,5 +1,3 @@
-"use client"
-
 import {
   createContext,
   useContext,
@@ -8,10 +6,8 @@ import {
   useMemo,
   type ReactNode,
 } from "react"
-import useSWR, { mutate } from "swr"
 import type { Project, GanttTask, ViewMode } from "./types"
-
-const fetcher = (url: string) => fetch(url).then((r) => r.json())
+import { memoryStore } from "./memory-store"
 
 interface ProjectContextValue {
   projects: Project[]
@@ -22,7 +18,6 @@ interface ProjectContextValue {
   setViewMode: (mode: ViewMode) => void
   activeCategory: string | null
   setActiveCategory: (cat: string | null) => void
-  // CRUD operations
   createProject: (data: { name: string; description: string; startDate: string; endDate: string }) => Promise<Project | null>
   updateProject: (id: string, data: Partial<Project>) => Promise<Project | null>
   deleteProject: (id: string) => Promise<boolean>
@@ -35,13 +30,11 @@ interface ProjectContextValue {
 const ProjectContext = createContext<ProjectContextValue | null>(null)
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  const { data: projects = [], isLoading, mutate: mutateProjects } = useSWR<Project[]>(
-    "/api/projects",
-    fetcher
-  )
+  const [projects, setProjects] = useState<Project[]>(() => memoryStore.getAllProjects())
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<ViewMode>("weeks")
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const activeProject = useMemo(
     () => projects.find((p) => p.id === activeProjectId) || projects[0] || null,
@@ -53,110 +46,89 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     setActiveCategory(null)
   }, [])
 
-  // CRUD operations
+  const refreshProjects = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const updatedProjects = memoryStore.getAllProjects()
+      setProjects(updatedProjects)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
   const createProject = useCallback(async (data: { name: string; description: string; startDate: string; endDate: string }): Promise<Project | null> => {
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) throw new Error("Failed to create project")
-      const project = await response.json()
-      await mutateProjects()
+      const project = memoryStore.createProject(data)
+      await refreshProjects()
       setActiveProjectId(project.id)
       return project
     } catch (error) {
       console.error("Error creating project:", error)
       return null
     }
-  }, [mutateProjects])
+  }, [refreshProjects])
 
   const updateProject = useCallback(async (id: string, data: Partial<Project>): Promise<Project | null> => {
     try {
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-      if (!response.ok) throw new Error("Failed to update project")
-      const project = await response.json()
-      await mutateProjects()
+      const project = memoryStore.updateProject(id, data)
+      await refreshProjects()
       return project
     } catch (error) {
       console.error("Error updating project:", error)
       return null
     }
-  }, [mutateProjects])
+  }, [refreshProjects])
 
   const deleteProject = useCallback(async (id: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/projects/${id}`, {
-        method: "DELETE",
-      })
-      if (!response.ok) throw new Error("Failed to delete project")
-      await mutateProjects()
-      if (activeProjectId === id) {
-        setActiveProjectId(null)
+      const result = memoryStore.deleteProject(id)
+      if (result) {
+        await refreshProjects()
+        if (activeProjectId === id) {
+          setActiveProjectId(null)
+        }
       }
-      return true
+      return result
     } catch (error) {
       console.error("Error deleting project:", error)
       return false
     }
-  }, [mutateProjects, activeProjectId])
+  }, [refreshProjects, activeProjectId])
 
   const createTask = useCallback(async (projectId: string, task: Omit<GanttTask, "id">): Promise<GanttTask | null> => {
     try {
-      const response = await fetch("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...task, projectId }),
-      })
-      if (!response.ok) throw new Error("Failed to create task")
-      const newTask = await response.json()
-      await mutateProjects()
+      const newTask = memoryStore.createTask(projectId, task)
+      await refreshProjects()
       return newTask
     } catch (error) {
       console.error("Error creating task:", error)
       return null
     }
-  }, [mutateProjects])
+  }, [refreshProjects])
 
   const updateTask = useCallback(async (taskId: string, task: Partial<GanttTask>): Promise<GanttTask | null> => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(task),
-      })
-      if (!response.ok) throw new Error("Failed to update task")
-      const updatedTask = await response.json()
-      await mutateProjects()
+      const updatedTask = memoryStore.updateTask(taskId, task)
+      await refreshProjects()
       return updatedTask
     } catch (error) {
       console.error("Error updating task:", error)
       return null
     }
-  }, [mutateProjects])
+  }, [refreshProjects])
 
   const deleteTask = useCallback(async (taskId: string): Promise<boolean> => {
     try {
-      const response = await fetch(`/api/tasks/${taskId}`, {
-        method: "DELETE",
-      })
-      if (!response.ok) throw new Error("Failed to delete task")
-      await mutateProjects()
-      return true
+      const result = memoryStore.deleteTask(taskId)
+      if (result) {
+        await refreshProjects()
+      }
+      return result
     } catch (error) {
       console.error("Error deleting task:", error)
       return false
     }
-  }, [mutateProjects])
-
-  const refreshProjects = useCallback(async () => {
-    await mutateProjects()
-  }, [mutateProjects])
+  }, [refreshProjects])
 
   return (
     <ProjectContext.Provider

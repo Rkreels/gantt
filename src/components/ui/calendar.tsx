@@ -54,7 +54,9 @@ function Calendar({
         ...classNames,
       }}
       components={{
+        // @ts-ignore - types are incomplete
         IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
+        // @ts-ignore - types are incomplete
         IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
       }}
       {...props}

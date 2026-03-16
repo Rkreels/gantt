@@ -1,6 +1,3 @@
-"use client"
-
-// Brand colors from globals.css dark mode
 const BRAND = {
   bg: "hsl(224, 20%, 7%)",
   foreground: "hsl(220, 14%, 96%)",
@@ -12,7 +9,6 @@ const BRAND = {
   chart2: "hsl(160, 60%, 50%)",
 }
 
-// Mini task bar for texture
 function MiniTaskBar({
   width,
   progress,
@@ -42,7 +38,6 @@ function MiniTaskBar({
   )
 }
 
-// Mini stat widget for texture
 function MiniStatWidget({
   label,
   value,
@@ -85,13 +80,11 @@ export function OGImage() {
         fontFamily: "var(--font-inter), system-ui, sans-serif",
       }}
     >
-      {/* Top accent line */}
       <div
         className="absolute top-0 left-0 right-0 h-1"
         style={{ backgroundColor: BRAND.primary }}
       />
 
-      {/* Background texture - floating UI elements in bottom right */}
       <div
         className="absolute flex flex-col gap-2"
         style={{
@@ -108,9 +101,7 @@ export function OGImage() {
         </div>
       </div>
 
-      {/* Main content */}
       <div className="relative z-10">
-        {/* Template name */}
         <h1
           className="font-bold"
           style={{
@@ -123,7 +114,6 @@ export function OGImage() {
           Gantt
         </h1>
 
-        {/* Subtitle */}
         <p
           className="mt-4"
           style={{
@@ -135,14 +125,12 @@ export function OGImage() {
           Project timelines with AI insights
         </p>
 
-        {/* Accent border element */}
         <div
           className="mt-8 h-px w-32"
           style={{ backgroundColor: BRAND.primary }}
         />
       </div>
 
-      {/* Bottom left subtle branding */}
       <div
         className="absolute bottom-8 left-20 flex items-center gap-2"
         style={{ color: BRAND.muted }}

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { useProject } from "@/lib/project-context"
 import {
@@ -14,7 +12,7 @@ import {
   Trash2,
   Pencil,
 } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -53,7 +51,6 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
   return (
     <>
       <header className="sticky top-0 z-50 flex items-center justify-between h-14 px-4 border-b border-border bg-card">
-        {/* Left: Logo + Project selector */}
         <div className="flex items-center gap-2 min-w-0">
           <GanttChartIcon className="w-5 h-5 text-primary flex-shrink-0" />
           <span className="font-semibold text-foreground text-sm hidden sm:inline">
@@ -136,7 +133,6 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
           )}
         </div>
 
-        {/* Right: Actions */}
         <div className="flex items-center gap-1">
           {activeProject && (
             <div className="hidden md:flex items-center gap-1 mr-1">
@@ -158,7 +154,6 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
               </button>
             </div>
           )}
-          {/* Desktop chat + settings buttons */}
           <button
             type="button"
             onClick={onOpenChat}
@@ -175,14 +170,13 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
             <Settings className="w-4 h-4" />
           </button>
           <Link
-            href="/brand-assets"
+            to="/brand-assets"
             className="hidden md:flex items-center justify-center w-9 h-9 rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             title="Brand Assets"
           >
             <Palette className="w-4 h-4" />
           </Link>
 
-          {/* Mobile hamburger */}
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
@@ -193,7 +187,6 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
         </div>
       </header>
 
-      {/* Full-screen mobile menu */}
       {menuOpen && (
         <div className="fixed inset-0 z-[100] bg-card md:hidden flex flex-col">
           <div className="flex items-center justify-between h-14 px-4 border-b border-border">
@@ -282,7 +275,7 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
             </button>
 
             <Link
-              href="/brand-assets"
+              to="/brand-assets"
               onClick={() => setMenuOpen(false)}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-accent transition-colors min-h-[52px]"
             >
@@ -321,7 +314,6 @@ export function AppHeader({ onOpenChat, onOpenSettings, onOpenNewProject, onEdit
         </div>
       )}
 
-      {/* Delete confirmation dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -1,11 +1,8 @@
-"use client"
-
 interface ThumbnailProps {
   word?: string
   variant?: "a" | "b" | "c"
 }
 
-// Brand colors from globals.css dark mode
 const BRAND = {
   bg: "hsl(224, 20%, 7%)",
   foreground: "hsl(220, 14%, 96%)",
@@ -18,7 +15,6 @@ const BRAND = {
   chart2: "hsl(160, 60%, 50%)",
 }
 
-// Mini task bar component for floating elements
 function MiniTaskBar({
   width,
   progress,
@@ -58,7 +54,6 @@ function MiniTaskBar({
   )
 }
 
-// Mini stat widget
 function MiniStatWidget({
   label,
   value,
@@ -90,7 +85,6 @@ function MiniStatWidget({
   )
 }
 
-// Mini category chip
 function MiniChip({
   label,
   color,
@@ -129,10 +123,8 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
         fontFamily: "var(--font-jetbrains-mono), monospace",
       }}
     >
-      {/* Variant A: Elements arranged left and right as shelves */}
       {variant === "a" && (
         <>
-          {/* Left floating elements - behind text */}
           <div
             className="absolute flex flex-col gap-3"
             style={{
@@ -162,7 +154,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             />
           </div>
 
-          {/* Right floating elements - behind text */}
           <div
             className="absolute flex flex-col gap-3"
             style={{
@@ -177,7 +168,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             <MiniStatWidget label="Tasks" value="12/18" />
           </div>
 
-          {/* Left element in front */}
           <div
             className="absolute"
             style={{
@@ -194,7 +184,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             </div>
           </div>
 
-          {/* Right element in front */}
           <div
             className="absolute"
             style={{
@@ -215,10 +204,8 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
         </>
       )}
 
-      {/* Variant B: Elements stacked diagonally for depth */}
       {variant === "b" && (
         <>
-          {/* Background layer - top left */}
           <div
             className="absolute"
             style={{
@@ -236,7 +223,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             </div>
           </div>
 
-          {/* Background layer - bottom right */}
           <div
             className="absolute"
             style={{
@@ -253,7 +239,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             </div>
           </div>
 
-          {/* Foreground - top right */}
           <div
             className="absolute"
             style={{
@@ -272,7 +257,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             />
           </div>
 
-          {/* Foreground - bottom left */}
           <div
             className="absolute"
             style={{
@@ -291,10 +275,8 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
         </>
       )}
 
-      {/* Variant C: Large intrusive UI elements - hero showcase */}
       {variant === "c" && (
         <>
-          {/* Giant task bar panel - top left, overlapping text */}
           <div
             className="absolute rounded-xl overflow-hidden"
             style={{
@@ -356,7 +338,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             </div>
           </div>
 
-          {/* Large stat cards cluster - right side */}
           <div
             className="absolute flex flex-col gap-4"
             style={{
@@ -432,7 +413,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             </div>
           </div>
 
-          {/* Large chip filter bar - bottom, spanning width */}
           <div
             className="absolute flex items-center gap-3 px-5 py-3 rounded-xl"
             style={{
@@ -457,7 +437,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
             <MiniChip label="Milestones" color={BRAND.ganttMilestone} />
           </div>
 
-          {/* View mode toggle - bottom right */}
           <div
             className="absolute flex items-center gap-1 px-2 py-1.5 rounded-lg"
             style={{
@@ -494,9 +473,7 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
         </>
       )}
 
-      {/* Central content - always on top */}
       <div className="relative z-20 flex flex-col items-center">
-        {/* The big word */}
         <h1
           className="font-bold tracking-tight"
           style={{
@@ -509,7 +486,6 @@ export function Thumbnail({ word = "GANTT", variant = "a" }: ThumbnailProps) {
           {word}
         </h1>
 
-        {/* Horizontal rule with "template" */}
         <div className="flex items-center gap-4 mt-4">
           <div
             className="h-px w-24"
